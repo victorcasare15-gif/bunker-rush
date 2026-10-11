@@ -224,6 +224,16 @@ body.touch #obj{font-size:11px}
             </div>
           </div>
           <div id="oLobby" class="info" hidden></div>
+          <div id="oCfg" class="opts" hidden>
+            <div>
+              <div class="lab" id="oBudgetLab">Orçamento de cada jogador</div>
+              <div class="pick" id="oBudget"></div>
+            </div>
+            <div>
+              <div class="lab" id="oTimeLab">Tempo de construção</div>
+              <div class="pick" id="oTime"></div>
+            </div>
+          </div>
           <div class="row" id="oLobbyBtns" hidden>
             <button class="btn" id="oStart">Começar partida</button>
             <button class="btn ghost" id="oLeave">Sair da sala</button>
@@ -640,9 +650,10 @@ function findPath(sc,sr,v){
   while(n!==-1){path.unshift({c:n%GW,r:(n/GW)|0});if(n===s)break;n=from[n]}
   return path;
 }
+function inPerimeterWall(x,z){for(const b of PB.static)if(b.y1>=3&&x>=b.x0&&x<=b.x1&&z>=b.z0&&z<=b.z1)return true;return false}
 function los(x0,z0,x1,z1){
   const a=toCell(x0,z0),b=toCell(x1,z1),d=Math.hypot(x1-x0,z1-z0),n=Math.ceil(d/0.4);
-  for(let k=1;k<n;k++){const t=k/n,c=toCell(x0+(x1-x0)*t,z0+(z1-z0)*t);if((c.c===a.c&&c.r===a.r)||(c.c===b.c&&c.r===b.r)||!inGrid(c.c,c.r))continue;const i=grid[c.r][c.c];if(i&&!i.dead&&i.def.kind==='wall'&&i.def.opaque)return false}
+  for(let k=1;k<n;k++){const t=k/n,px=x0+(x1-x0)*t,pz=z0+(z1-z0)*t,c=toCell(px,pz);if(!inGrid(c.c,c.r)){if(inPerimeterWall(px,pz))return false;continue}if((c.c===a.c&&c.r===a.r)||(c.c===b.c&&c.r===b.r))continue;const i=grid[c.r][c.c];if(i&&!i.dead&&i.def.kind==='wall'&&i.def.opaque)return false}
   return true;
 }
 const chest=v=>new V3(v.pos.x,1.25,v.pos.z);
@@ -899,8 +910,8 @@ function updEnts(dt,t){
 }
 function updProj(dt){
   const h=P.crouch?1.1:1.8;
-  for(let k=NB.proj.length-1;k>=0;k--){const p=NB.proj[k];p.life-=dt;p.m.position.addScaledVector(p.vel,dt);const q=p.m.position;let hit=p.life<=0;
-    if(!hit)for(const b of NB.boxes){if(q.x>b.x0&&q.x<b.x1&&q.y>b.y0&&q.y<b.y1&&q.z>b.z0&&q.z<b.z1){hit=true;break}}
+  for(let k=NB.proj.length-1;k>=0;k--){const p=NB.proj[k];p.life-=dt;const prev=p.m.position.clone();p.m.position.addScaledVector(p.vel,dt);const q=p.m.position;let hit=p.life<=0;
+    if(!hit)for(const b of NB.boxes){if(segHit(prev,q,b)){hit=true;break}}
     if(!hit&&G.deadT<=0&&Math.hypot(q.x-P.pos.x,q.z-P.pos.z)<0.45&&q.y>P.pos.y&&q.y<P.pos.y+h+0.1){hurtPlayer(p.dmg);hit=true}
     if(hit){NB.group.remove(p.m);NB.proj.splice(k,1)}}
 }
@@ -979,7 +990,7 @@ function unlocked(L){if(L===1)return true;for(let b=1;b<=10;b++)if(G.progress[`$
 function renderMenu(){
   const mm=G.menuMode,cr=mm==='creative',on=mm==='online';for(const b of $('gamePick').children)b.className=b.dataset.g===mm?'on':'';
   $('normalOpts').hidden=cr||on;$('creativeOpts').hidden=!cr;$('onlineOpts').hidden=!on;$('playBtn').hidden=on;$('playBtn').textContent=cr?'Entrar no bunker criativo':'Entrar no bunker';$('resetBtn').hidden=cr||on;
-  if(on){renderOnlineOpts();$('lvInfo').innerHTML=`<b>Online ao vivo, 2 jogadores</b> · crie uma sala e mande o código para um amigo<br>Os dois montam o bunker em ${fmt(ONLINE_BUILD)} com ${money(ONLINE_BUDGET)} e depois cada um invade o bunker do outro. Ganha quem chegar primeiro ao núcleo.`;return}
+  if(on){renderOnlineOpts();$('lvInfo').innerHTML=`<b>Online ao vivo, 2 jogadores</b> · crie uma sala e mande o código para um amigo<br>O dono da sala escolhe o orçamento e o tempo para montar o bunker. Depois cada um invade o bunker do outro. Ganha quem chegar primeiro ao núcleo.`;return}
   if(cr){renderCreativeOpts();return}
   const lv=$('lvPick'),bk=$('bkPick');lv.innerHTML='';bk.innerHTML='';
   for(let L=1;L<=10;L++){const b=document.createElement('button');b.textContent=L;b.disabled=!unlocked(L);b.className=L===G.menuL?'on':'';b.title=b.disabled?`Vença um bunker do nível ${L-1} para liberar`:`Nível ${L}`;b.onclick=()=>{G.menuL=L;renderMenu()};lv.appendChild(b)}
@@ -1116,7 +1127,7 @@ armReset($('cDel'),'Apagar este bunker',()=>{crDelete();renderMenu()},'Bunker ap
 
 
 /* ================= ONLINE (2 jogadores, código de sala) ================= */
-const ONLINE_BUDGET=5000,ONLINE_BUILD=180,PVP_DMG=0.3,MIR_X=-1000;
+const ONLINE_BUDGET=5000,ONLINE_BUILD=180,BUDGETS=[2000,3000,5000,8000,12000,20000,50000],BUILD_TIMES=[60,120,180,300,600,900],PVP_DMG=0.3,MIR_X=-1000;
 const O={net:null,uid:null,code:null,room:null,opp:null,oppId:null,isHost:false,phase:'',round:-1,ready:false,hadOpp:false,ended:false,err:'',
   sendT:0,destroyed:{},dDirty:false,lastD:'',oppSt:null,mir:null,mirItems:{},oppMesh:null,myLayout:'',pt:null,claiming:false,viewYaw:0};
 P.speedMul=1;
@@ -1193,7 +1204,7 @@ const PeerNet={
     else if(m.t==='room'){this._apply(m.p);this._broadcast()}
     else if(m.t==='claim'){const ok=!this.state.winner;if(ok)this.state.winner=c.uid;c.send({t:'claimed',ok,id:m.id});if(ok)this._broadcast()}
   },
-  _apply(p){if(!p||typeof p!=='object')return;for(const k of ['state','round','buildEnds','winner'])if(k in p){if(p[k]===null)delete this.state[k];else this.state[k]=p[k]}},
+  _apply(p){if(!p||typeof p!=='object')return;for(const k of ['state','round','buildEnds','winner','budget','buildSecs'])if(k in p){if(p[k]===null)delete this.state[k];else this.state[k]=p[k]}},
   _broadcast(){this.state._t=Date.now();const msg={t:'state',s:this.state};for(const c of this.conns)if(c.open)c.send(msg);this._emit()},
   async join(code,name){
     const pr=await this._open(null).catch(()=>{throw new Error('conexao')});this.peer=pr;this.host=false;this.state=null;
@@ -1237,13 +1248,21 @@ function renderOnlineOpts(){
   if(document.activeElement!==$('oName'))$('oName').value=oName();
   const inRoom=!!O.code,r=O.room;
   $('oJoinBox').hidden=inRoom;$('oLobbyBtns').hidden=!inRoom;$('oLobby').hidden=!inRoom&&!O.err;
-  if(!inRoom){setText($('oLobby'),O.err||'');return}
+  if(!inRoom){$('oCfg').hidden=true;setText($('oLobby'),O.err||'');return}
   const ps=r&&r.players?Object.entries(r.players):[];
   const names=ps.map(([id,pl])=>esc(pl.name||'Jogador')+(id===O.uid?' (você)':'')).join(' · ')||'—';
   $('oLobby').innerHTML=`Sala <b style="font-size:22px;letter-spacing:.25em">${esc(O.code)}</b> · mande este código para o seu amigo<br>Jogadores (${ps.length}/2): ${names}<br>`+
     (ps.length<2?'Aguardando o segundo jogador…':O.isHost?'Tudo pronto: clique em <b>Começar partida</b>.':'Aguardando o dono da sala começar…')+(O.err?`<br><span style="color:var(--danger)">${esc(O.err)}</span>`:'');
   $('oStart').hidden=!O.isHost;$('oStart').disabled=ps.length<2;
+  const cb=roomBudget(),ct=roomTime();$('oCfg').hidden=false;
+  setText($('oBudgetLab'),O.isHost?'Orçamento de cada jogador (você escolhe)':'Orçamento de cada jogador (o dono da sala escolhe)');
+  setText($('oTimeLab'),O.isHost?'Tempo de construção (você escolhe)':'Tempo de construção (o dono da sala escolhe)');
+  const pick=(el,vals,cur,label,key)=>{el.innerHTML='';for(const v of vals){const b=document.createElement('button');b.textContent=label(v);b.style.padding='0 12px';b.className=v===cur?'on':'';b.disabled=!O.isHost&&v!==cur;b.onclick=()=>{if(O.isHost&&O.net)O.net.room({[key]:v})};el.appendChild(b)}};
+  pick($('oBudget'),BUDGETS,cb,money,'budget');
+  pick($('oTime'),BUILD_TIMES,ct,v=>v<60?v+' s':(v/60)+' min','buildSecs');
 }
+function roomBudget(){const v=O.room&&O.room.budget;return BUDGETS.includes(v)?v:ONLINE_BUDGET}
+function roomTime(){const v=O.room&&O.room.buildSecs;return BUILD_TIMES.includes(v)?v:ONLINE_BUILD}
 function onRoom(room){
   if(!O.net||!O.net.code)return;
   O.room=room;
@@ -1261,7 +1280,7 @@ function onRoom(room){
   }
   if(O.opp)O.hadOpp=true;
 }
-function onlineStartMatch(){const r=O.room;if(!r||Object.keys(r.players||{}).length<2)return;O.net.room({state:'build',round:(r.round||0)+1,buildEnds:O.net.now()+ONLINE_BUILD*1000,winner:null})}
+function onlineStartMatch(){const r=O.room;if(!r||Object.keys(r.players||{}).length<2)return;O.net.room({state:'build',round:(r.round||0)+1,buildEnds:O.net.now()+roomTime()*1000,winner:null})}
 function onlineRematch(){if(!O.opp){toast('O oponente saiu da sala','bad');return}onlineStartMatch()}
 function onlineLeave(silent){
   if(O.net)O.net.leave();
@@ -1271,12 +1290,12 @@ function onlineLeave(silent){
 }
 function startOnlineBuild(room){
   O.round=room.round;O.phase='build';O.ready=false;O.ended=false;O.hadOpp=!!O.opp;O.destroyed={};O.dDirty=false;O.lastD='';O.oppSt=null;O.claiming=false;
-  G.online=true;G.creative=false;G.state='build';G.money=ONLINE_BUDGET;G.buildT=Math.max(5,(room.buildEnds-O.net.now())/1000);G.time=0;G.saveDirty=false;
+  G.online=true;G.creative=false;G.state='build';G.money=roomBudget();G.buildT=Math.max(5,(room.buildEnds-O.net.now())/1000);G.time=0;G.saveDirty=false;
   resetGrid();clearInvs();clearNB();clearMirror();loadLayout(true);
   P.pos.set(0,0,-3);P.vy=0;P.yaw=0;P.pitch=-0.3;P.fly=false;P.hp=100;gun.visible=false;
   $('hud').hidden=false;$('hotbar').hidden=false;$('bl').hidden=true;$('br').hidden=true;$('warn').hidden=true;$('deadmsg').hidden=true;
   showOnly('pause');
-  showPause('Partida online',`Você tem ${fmt(G.buildT)} e ${money(ONLINE_BUDGET)} para montar o bunker que ${oppName()} vai invadir. `+(G.touch?'Toque em INICIAR quando terminar.':'Aperte Enter quando terminar.')+' Depois você invade o bunker dele ao vivo. O relógio não para.');
+  showPause('Partida online',`Você tem ${fmt(G.buildT)} e ${money(G.money)} para montar o bunker que ${oppName()} vai invadir. `+(G.touch?'Toque em INICIAR quando terminar.':'Aperte Enter quando terminar.')+' Depois você invade o bunker dele ao vivo. O relógio não para.');
   $('pzGo').textContent='Começar';
 }
 function onlineReady(){
@@ -1310,8 +1329,9 @@ function startOnlineRace(room){
 function shootGrid(){
   G.ammo--;G.fireCd=0.11;P.pitch=Math.min(1.5,P.pitch+0.01);G.recoil=1;flash.visible=true;setTimeout(()=>flash.visible=false,40);sfx.shot();
   ray.setFromCamera(CENTER,cam);ray.far=120;
-  const hits=ray.intersectObjects(PB.items.children,true);let end=null;
-  for(const h of hits){let o=h.object;while(o&&!o.userData.inst)o=o.parent;const inst=o&&o.userData.inst;if(!inst||inst.dead||inst.def.kind==='trap')continue;
+  const hits=ray.intersectObjects(PB.items.children.concat(PB.group.children.filter(o=>!o.isLine)),true);let end=null;
+  for(const h of hits){let o=h.object;while(o&&!o.userData.inst)o=o.parent;const inst=o&&o.userData.inst;if(inst&&(inst.dead||inst.def.kind==='trap'))continue;
+    if(!inst){end=h.point;spark(h.point,0xffd27a);break}
     end=h.point;inst.hp-=25;sfx.hit();$('xhair').classList.add('hit');setTimeout(()=>$('xhair').classList.remove('hit'),90);spark(h.point,0xff5050);if(inst.hp<=0)destroyInst(inst);break}
   const tip=new V3(0,0.02,-0.55);gun.localToWorld(tip);
   tracer(tip,end||ray.ray.origin.clone().addScaledVector(ray.ray.direction,80),0xffe2a0,0.04);
@@ -1600,6 +1620,6 @@ function loop(now){
   updInsetCam(dt);updHUD();updTouchUI();render();
 }
 applyMode();renderMenu();showOnly('menu');requestAnimationFrame(loop);
-window.__BR={O,onlineReady,startOnlineRace,step:(n,dt)=>{for(let k=0;k<n;k++){if(G.state!=='raid'&&G.state!=='wave')break;G.time+=dt;if(G.state==='wave')updWave(dt,G.time);else updRaid(dt,G.time);updFx(dt)}return G.state},startCreative,startWave,CR,G,P,D,NB,startBuild,startRaid,endGame,ITEMS,place,insts:()=>insts};
+window.__BR={los,O,onlineReady,startOnlineRace,step:(n,dt)=>{for(let k=0;k<n;k++){if(G.state!=='raid'&&G.state!=='wave')break;G.time+=dt;if(G.state==='wave')updWave(dt,G.time);else updRaid(dt,G.time);updFx(dt)}return G.state},startCreative,startWave,CR,G,P,D,NB,startBuild,startRaid,endGame,ITEMS,place,insts:()=>insts};
 })();
 </script>
