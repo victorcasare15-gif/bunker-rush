@@ -173,7 +173,7 @@ body.touch #obj{font-size:11px}
           <p class="lede" style="margin-top:10px">Monte a segurança do seu bunker, depois invada o bunker do NPC enquanto ele invade o seu. Ganha quem chegar primeiro ao núcleo do outro.</p>
         </div>
         <div class="steps">
-          <div class="step"><b>1 · Construir</b><p>10 minutos e um orçamento para espalhar 50 tipos de defesa: paredes, torretas, armadilhas, seguranças e suporte.</p></div>
+          <div class="step"><b>1 · Construir</b><p>10 minutos e um orçamento para espalhar 100 tipos de defesa: paredes, torretas, armadilhas, seguranças e suporte.</p></div>
           <div class="step"><b>2 · Invadir</b><p>Atravesse as fases do bunker do NPC em primeira pessoa: torretas, lasers, minas, abismos, terminais e chefes.</p></div>
           <div class="step"><b>3 · Corrida</b><p>Ao mesmo tempo, o NPC ataca o seu bunker. Acompanhe pela câmera no canto superior direito.</p></div>
         </div>
@@ -258,7 +258,7 @@ body.touch #obj{font-size:11px}
             <div><kbd>Clique</kbd>colocar / atirar</div>
             <div><kbd>Botão dir.</kbd>vender defesa</div>
             <div><kbd>Q</kbd><kbd>E</kbd>/ roda: trocar item</div>
-            <div><kbd>Tab</kbd>catálogo das 50 defesas</div>
+            <div><kbd>Tab</kbd>catálogo das 100 defesas</div>
             <div><kbd>F</kbd>voar na construção</div>
             <div><kbd>Enter</kbd>começar a invasão antes</div>
             <div><kbd>R</kbd>recarregar · <kbd>Esc</kbd>pausar</div>
@@ -269,7 +269,7 @@ body.touch #obj{font-size:11px}
             <div><kbd>Polegar direito</kbd>arraste a tela para olhar</div>
             <div><kbd>COLOCAR</kbd>põe a defesa onde a mira aponta (segure para pintar paredes)</div>
             <div><kbd>VENDER</kbd>vende a defesa na mira</div>
-            <div><kbd>◀ ▶</kbd>trocar item · <kbd>CATÁLOGO</kbd>as 50 defesas</div>
+            <div><kbd>◀ ▶</kbd>trocar item · <kbd>CATÁLOGO</kbd>as 100 defesas</div>
             <div><kbd>ATIRAR</kbd>segure para disparar</div>
             <div><kbd>PULAR</kbd><kbd>AGACHAR</kbd>segure o botão</div>
             <div><kbd>II</kbd>pausar · use o celular na horizontal</div>
@@ -358,6 +358,14 @@ const ITEMS=[
  {id:'glass',cat:'Barreiras',name:'Vidro Blindado',cost:140,kind:'wall',hp:700,h:3,color:0x9fd6ff,opaque:false,glass:true,desc:'Resistente e transparente: as torretas atiram através dele.'},
  {id:'spikewall',cat:'Barreiras',name:'Parede de Espinhos',cost:180,kind:'wall',hp:600,h:3,color:0x5a5f52,opaque:true,thorns:30,desc:'Fere o invasor com 30 de dano/s enquanto ele tenta quebrá-la.'},
  {id:'titan',cat:'Barreiras',name:'Parede de Titânio',cost:400,kind:'wall',hp:3200,h:3,color:0x7f8c96,opaque:true,desc:'A barreira mais resistente do jogo.'},
+ {id:'plank',cat:'Barreiras',name:'Barricada de Tábuas',cost:10,kind:'wall',hp:80,h:1.1,color:0x9a6b3f,opaque:false,look:'sand',desc:'A mais barata de todas. Baixa e fraca.'},
+ {id:'fence',cat:'Barreiras',name:'Cerca de Alambrado',cost:35,kind:'wall',hp:200,h:3,color:0x9aa0a6,opaque:false,glass:true,desc:'Bloqueia a passagem, mas dá para atirar através dela.'},
+ {id:'stone',cat:'Barreiras',name:'Muro de Pedra',cost:90,kind:'wall',hp:600,h:3,color:0x7d7468,opaque:true,look:'brick',desc:'Mais resistente que o concreto.'},
+ {id:'reinf',cat:'Barreiras',name:'Concreto Reforçado',cost:170,kind:'wall',hp:1300,h:3,color:0x6f777e,opaque:true,look:'steel',desc:'Muita resistência por um preço médio.'},
+ {id:'nanowall',cat:'Barreiras',name:'Nanomuro',cost:220,kind:'wall',hp:500,h:3,color:0x3b8f7a,opaque:true,regen:15,look:'titan',desc:'Se conserta sozinho: +15 PV por segundo.'},
+ {id:'boomwall',cat:'Barreiras',name:'Parede Explosiva',cost:160,kind:'wall',hp:300,h:3,color:0xa0492e,opaque:true,blast:150,look:'door',desc:'Quando é destruída, explode e causa 150 de dano em quem está perto.'},
+ {id:'blades',cat:'Barreiras',name:'Muralha de Lâminas',cost:320,kind:'wall',hp:1000,h:3,color:0x4a4f45,opaque:true,thorns:55,desc:'Fere com 55 de dano/s quem tenta quebrá-la.'},
+ {id:'vault',cat:'Barreiras',name:'Porta de Cofre',cost:650,kind:'wall',hp:4500,h:3,color:0x2e3540,opaque:true,look:'door',desc:'A barreira mais forte de todas. Cara.'},
  {id:'tlight',cat:'Torretas',name:'Torreta Leve',cost:150,kind:'turret',hp:200,h:1.6,range:9,dmg:8,rate:0.25,color:0x4f7d5c,barrel:0.7,desc:'Metralhadora rápida.'},
  {id:'theavy',cat:'Torretas',name:'Torreta Pesada',cost:300,kind:'turret',hp:420,h:1.6,range:9,dmg:24,rate:0.5,color:0x3e5a46,barrel:0.9,bw:0.14,desc:'Dano alto e blindagem reforçada.'},
  {id:'tsnip',cat:'Torretas',name:'Torreta Atiradora',cost:350,kind:'turret',hp:150,h:1.6,range:22,dmg:95,rate:2.5,color:0x5b5f7a,barrel:1.5,bw:0.05,desc:'Alcance enorme, tiro lento e forte.'},
@@ -371,6 +379,20 @@ const ITEMS=[
  {id:'tsonic',cat:'Torretas',name:'Canhão Sônico',cost:330,kind:'turret',hp:260,h:1.6,range:6,dmg:30,rate:1.2,stun:0.6,color:0x7a5fa8,barrel:0.5,bw:0.22,fx:0xd8c8ff,desc:'Ondas que atordoam o invasor por 0,6 s.'},
  {id:'tmortar',cat:'Torretas',name:'Morteiro',cost:420,kind:'turret',hp:220,h:1.6,range:18,dmg:160,rate:4.0,noLos:true,boom:true,color:0x55603a,barrel:0.45,bw:0.24,fx:0xffb040,desc:'Tiro por cima das paredes, longo alcance e muito dano.'},
  {id:'tplasma',cat:'Torretas',name:'Canhão de Plasma',cost:650,kind:'turret',hp:320,h:1.6,range:13,dmg:220,rate:3.5,boom:true,color:0x2d5f7a,barrel:1.0,bw:0.12,fx:0x5af0ff,desc:'O tiro mais forte de todas as torretas.'},
+ {id:'tsentry',cat:'Torretas',name:'Torreta Sentinela',cost:200,kind:'turret',hp:220,h:1.6,range:11,dmg:14,rate:0.4,color:0x6a7a5a,barrel:0.8,desc:'Alcance bom por um preço baixo.'},
+ {id:'tdual',cat:'Torretas',name:'Torreta Dupla',cost:260,kind:'turret',hp:260,h:1.6,range:9,dmg:9,rate:0.15,color:0x506f5a,barrel:0.7,bw:0.11,desc:'Dois canos: 60 de dano/s.'},
+ {id:'tacid',cat:'Torretas',name:'Torreta Ácida',cost:250,kind:'turret',hp:220,h:1.6,range:7,dmg:12,rate:0.3,slow:0.7,slowT:1.5,color:0x5f8a2a,barrel:0.6,bw:0.12,fx:0x9cff4a,desc:'Corrói e deixa 30% mais lento.'},
+ {id:'tshock',cat:'Torretas',name:'Torreta de Choque',cost:300,kind:'turret',hp:240,h:1.6,range:5,dmg:20,rate:0.6,stun:0.25,top:'coil',color:0x4a5aa0,fx:0x9fd0ff,desc:'Choques rápidos que atordoam.'},
+ {id:'tnapalm',cat:'Torretas',name:'Napalm',cost:420,kind:'turret',hp:320,h:1.6,range:7,dmg:14,rate:0.15,color:0x8a3a1a,barrel:0.6,bw:0.2,fx:0xff5a1a,desc:'Fogo de alcance médio: mais de 90 de dano/s.'},
+ {id:'tfrost',cat:'Torretas',name:'Canhão Glacial',cost:480,kind:'turret',hp:280,h:1.6,range:10,dmg:20,rate:0.6,slow:0.3,slowT:3,color:0x7fc7d9,barrel:0.8,bw:0.14,fx:0xbff4ff,desc:'Congela forte: 70% mais lento por 3 s.'},
+ {id:'tsonic2',cat:'Torretas',name:'Canhão Infrassom',cost:520,kind:'turret',hp:300,h:1.6,range:7,dmg:45,rate:1.0,stun:1.0,color:0x6a4f98,barrel:0.5,bw:0.26,fx:0xd8c8ff,desc:'Atordoa por 1 s a cada disparo.'},
+ {id:'tcannon',cat:'Torretas',name:'Canhão de Artilharia',cost:520,kind:'turret',hp:380,h:1.6,range:12,dmg:150,rate:2.5,boom:true,color:0x55583a,barrel:0.8,bw:0.25,fx:0xffb040,desc:'Balas pesadas que explodem.'},
+ {id:'tmissile',cat:'Torretas',name:'Mísseis Teleguiados',cost:550,kind:'turret',hp:300,h:1.6,range:16,dmg:80,rate:1.5,noLos:true,boom:true,top:'pod',color:0x5a5f3a,fx:0xffb040,desc:'Contornam paredes e acertam de longe.'},
+ {id:'tminigun',cat:'Torretas',name:'Minigun Pesada',cost:600,kind:'turret',hp:450,h:1.6,range:9,dmg:6,rate:0.05,color:0x3c4650,barrel:0.9,bw:0.18,desc:'Chuva de balas: 120 de dano/s.'},
+ {id:'tsniper2',cat:'Torretas',name:'Atiradora Pesada',cost:600,kind:'turret',hp:200,h:1.6,range:26,dmg:180,rate:3.0,color:0x494d66,barrel:1.7,bw:0.06,desc:'Alcance gigante e tiro devastador.'},
+ {id:'trail',cat:'Torretas',name:'Railgun',cost:700,kind:'turret',hp:220,h:1.6,range:26,dmg:260,rate:4.0,color:0x34506a,barrel:1.6,bw:0.07,fx:0x7af0ff,desc:'O tiro único mais forte do jogo.'},
+ {id:'tbeam',cat:'Torretas',name:'Feixe de Partículas',cost:750,kind:'turret',hp:300,h:1.6,range:14,dmg:10,rate:0.08,color:0x5a2f7a,barrel:0.9,bw:0.1,fx:0xd070ff,desc:'Feixe contínuo: 125 de dano/s.'},
+ {id:'tstorm',cat:'Torretas',name:'Torre da Tempestade',cost:800,kind:'turret',hp:320,h:1.6,range:8,dmg:70,rate:0.9,stun:0.5,noLos:true,top:'coil',color:0x2f4f8f,fx:0xd8f0ff,desc:'Raios fortes que atravessam paredes e atordoam.'},
  {id:'mine', cat:'Armadilhas',name:'Mina Terrestre',cost:60,kind:'trap',trap:'mine',dmg:130,color:0x444a2e,desc:'Explode uma vez: 130 de dano.'},
  {id:'spike',cat:'Armadilhas',name:'Placa de Espinhos',cost:80,kind:'trap',trap:'spike',dps:35,color:0x6d6d6d,desc:'Fere sem parar quem pisa.'},
  {id:'oil',  cat:'Armadilhas',name:'Poça de Óleo',cost:50,kind:'trap',trap:'oil',slow:0.35,color:0x141414,desc:'Deixa o invasor 65% mais lento.'},
@@ -383,6 +405,16 @@ const ITEMS=[
  {id:'fire', cat:'Armadilhas',name:'Piso em Chamas',cost:160,kind:'trap',trap:'spike',dps:50,color:0x5a2a14,desc:'Queima: 50 de dano/s enquanto o invasor pisa.'},
  {id:'claymore',cat:'Armadilhas',name:'Claymore',cost:140,kind:'trap',trap:'mine',dmg:250,color:0x4d5a32,desc:'Mina poderosa: 250 de dano uma vez.'},
  {id:'tele', cat:'Armadilhas',name:'Teleporte Reverso',cost:300,kind:'trap',trap:'tele',color:0x7a4fd6,desc:'Manda o invasor de volta para a entrada (uso único).'},
+ {id:'ice',  cat:'Armadilhas',name:'Piso Congelado',cost:40,kind:'trap',trap:'oil',slow:0.5,color:0xbfe8f2,desc:'Escorregadio: 50% mais lento.'},
+ {id:'tar',  cat:'Armadilhas',name:'Piche',cost:110,kind:'trap',trap:'oil',slow:0.2,color:0x2a2016,desc:'Gruda: 80% mais lento.'},
+ {id:'mine2',cat:'Armadilhas',name:'Mina Saltadora',cost:110,kind:'trap',trap:'mine',dmg:200,color:0x3a3f2a,desc:'Mina forte: 200 de dano uma vez.'},
+ {id:'stunmine',cat:'Armadilhas',name:'Mina Atordoante',cost:120,kind:'trap',trap:'mine',dmg:60,stun:3,color:0x2c4a7a,desc:'Explode e prende o invasor por 3 s.'},
+ {id:'spike2',cat:'Armadilhas',name:'Espinhos de Titânio',cost:160,kind:'trap',trap:'spike',dps:60,color:0x8c9298,desc:'Fere com 60 de dano/s.'},
+ {id:'pit2', cat:'Armadilhas',name:'Fosso Profundo',cost:220,kind:'trap',trap:'pit',dmg:120,stun:6,color:0x120f0c,desc:'Derruba: 120 de dano e 6 s preso (uso único).'},
+ {id:'elec2',cat:'Armadilhas',name:'Grade de Alta Tensão',cost:240,kind:'trap',trap:'elec',dmg:80,stun:1,cd:2,color:0x3a4fe0,desc:'Choque forte a cada 2 s.'},
+ {id:'gas2', cat:'Armadilhas',name:'Gás Nervoso',cost:260,kind:'trap',trap:'gas',dps:40,color:0x9a4fbf,desc:'Nuvem de 3×3 casas com 40 de dano/s.'},
+ {id:'lasergrid',cat:'Armadilhas',name:'Grade Laser',cost:300,kind:'trap',trap:'spike',dps:80,color:0x5a1420,look:'fire',desc:'Corta: 80 de dano/s enquanto o invasor passa.'},
+ {id:'tele2',cat:'Armadilhas',name:'Portal Reverso Duplo',cost:700,kind:'trap',trap:'tele',cd:15,color:0xd04fd6,desc:'Manda o invasor de volta para a entrada. Recarrega em 15 s.'},
  {id:'gpistol',cat:'Seguranças',name:'Segurança',cost:120,kind:'guard',hp:130,range:8,dmg:10,rate:0.5,speed:3,color:0x2f4d8a,desc:'Persegue o invasor e atira.'},
  {id:'gshot',cat:'Seguranças',name:'Segurança de Escopeta',cost:200,kind:'guard',hp:170,range:4.5,dmg:40,rate:1.0,speed:3.2,color:0x1f3a6e,desc:'Muito dano de perto.'},
  {id:'gsnip',cat:'Seguranças',name:'Atirador de Elite',cost:260,kind:'guard',hp:100,range:18,dmg:60,rate:2.0,speed:0,color:0x3b3f55,rifle:true,desc:'Fica parado no posto e acerta de longe.'},
@@ -391,6 +423,16 @@ const ITEMS=[
  {id:'gswat',cat:'Seguranças',name:'Tropa de Choque',cost:280,kind:'guard',hp:320,range:3.5,dmg:30,rate:0.8,speed:2.5,swat:true,color:0x1d2633,desc:'Escudo pesado: aguenta muito dano.'},
  {id:'ggren',cat:'Seguranças',name:'Granadeiro',cost:280,kind:'guard',hp:140,range:9,dmg:70,rate:2.2,speed:2.6,boom:true,color:0x4a5a2f,desc:'Lança granadas com dano em explosão.'},
  {id:'grobot',cat:'Seguranças',name:'Robô Sentinela',cost:420,kind:'guard',hp:480,range:7,dmg:18,rate:0.35,speed:1.8,robot:true,color:0x6d7680,desc:'Lento, blindado e com metralhadora.'},
+ {id:'grecruit',cat:'Seguranças',name:'Recruta',cost:60,kind:'guard',hp:80,range:7,dmg:6,rate:0.5,speed:3,color:0x4a6aa0,desc:'Barato e fraco. Ajuda a distrair.'},
+ {id:'gsmg',cat:'Seguranças',name:'Segurança com Submetralhadora',cost:230,kind:'guard',hp:140,range:6,dmg:7,rate:0.12,speed:3.4,color:0x26406e,desc:'Rajadas rápidas de perto.'},
+ {id:'grifle',cat:'Seguranças',name:'Fuzileiro',cost:260,kind:'guard',hp:180,range:11,dmg:18,rate:0.45,speed:2.8,color:0x34502e,rifle:true,desc:'Bom alcance e dano equilibrado.'},
+ {id:'gninja',cat:'Seguranças',name:'Ninja',cost:220,kind:'guard',hp:110,range:1.6,dmg:45,rate:0.6,speed:7,melee:true,color:0x161616,desc:'Muito rápido, ataca com espada.'},
+ {id:'gwolf',cat:'Seguranças',name:'Lobo',cost:160,kind:'guard',hp:140,range:1.4,dmg:24,rate:0.45,speed:7,dog:true,color:0x6a6a6a,desc:'Mais forte que o cão de guarda.'},
+ {id:'gflame',cat:'Seguranças',name:'Soldado Lança-Chamas',cost:300,kind:'guard',hp:200,range:3.5,dmg:6,rate:0.08,speed:2.8,color:0x7a3a1a,desc:'Queima de perto com 75 de dano/s.'},
+ {id:'gheavy',cat:'Seguranças',name:'Metralhador Pesado',cost:380,kind:'guard',hp:300,range:8,dmg:8,rate:0.1,speed:1.6,swat:true,color:0x3a3a3a,desc:'Lento, blindado e atira sem parar.'},
+ {id:'gcommander',cat:'Seguranças',name:'Comandante',cost:400,kind:'guard',hp:250,range:12,dmg:30,rate:0.6,speed:2.6,rifle:true,color:0x7a6a2a,desc:'Experiente: alcance e dano altos.'},
+ {id:'gdrone2',cat:'Seguranças',name:'Drone de Ataque',cost:480,kind:'guard',hp:200,range:10,dmg:22,rate:0.45,speed:5,fly:true,color:0x5a6066,desc:'Drone mais forte, voa por cima das paredes.'},
+ {id:'gmech',cat:'Seguranças',name:'Mecha de Combate',cost:750,kind:'guard',hp:900,range:8,dmg:30,rate:0.4,speed:1.3,robot:true,boom:true,color:0x4a5560,desc:'Robô gigante com tiros explosivos.'},
  {id:'cam',  cat:'Suporte',name:'Câmera de Segurança',cost:80,kind:'util',hp:120,h:2,aura:'range',val:0.35,radius:7,color:0xd0d4d8,desc:'+35% de alcance para torretas e seguranças próximos.'},
  {id:'light',cat:'Suporte',name:'Holofote',cost:120,kind:'util',hp:120,h:2,aura:'dmg',val:0.25,radius:6,color:0xf2d36b,desc:'+25% de dano para as defesas próximas.'},
  {id:'gen',  cat:'Suporte',name:'Gerador',cost:200,kind:'util',hp:200,h:2,aura:'rate',val:0.4,radius:6,color:0xe0a030,desc:'+40% de cadência nas torretas e seguranças próximos.'},
@@ -398,6 +440,14 @@ const ITEMS=[
  {id:'radar',cat:'Suporte',name:'Radar',cost:220,kind:'util',hp:150,h:2,aura:'range',val:0.5,radius:9,color:0xb8c2c8,desc:'+50% de alcance numa área grande.'},
  {id:'amp',  cat:'Suporte',name:'Amplificador',cost:260,kind:'util',hp:150,h:2,aura:'dmg',val:0.4,radius:5,color:0xc04a8a,desc:'+40% de dano para as defesas próximas.'},
  {id:'shield',cat:'Suporte',name:'Gerador de Escudo',cost:300,kind:'util',hp:220,h:2,aura:'armor',val:0.4,radius:6,color:0x4a8ad8,desc:'Tudo ao redor recebe 40% menos dano do invasor.'},
+ {id:'cam2', cat:'Suporte',name:'Câmera Térmica',cost:180,kind:'util',hp:150,h:2,aura:'range',val:0.5,radius:8,color:0xc0705a,look:'cam',desc:'+50% de alcance numa área grande.'},
+ {id:'light2',cat:'Suporte',name:'Holofote Militar',cost:220,kind:'util',hp:160,h:2,aura:'dmg',val:0.35,radius:7,color:0xf2d36b,look:'light',desc:'+35% de dano para as defesas próximas.'},
+ {id:'slowfield',cat:'Suporte',name:'Campo de Lentidão',cost:300,kind:'util',hp:200,h:2,aura:'slow',val:0.5,radius:5,color:0x7fc7d9,look:'shield',desc:'Quem estiver dentro do raio fica 50% mais lento.'},
+ {id:'radtower',cat:'Suporte',name:'Torre de Radiação',cost:350,kind:'util',hp:200,h:2,aura:'burn',val:20,radius:4,color:0x9cff4a,look:'amp',desc:'Causa 20 de dano/s em quem estiver perto.'},
+ {id:'gen2', cat:'Suporte',name:'Reator',cost:380,kind:'util',hp:260,h:2,aura:'rate',val:0.6,radius:6,color:0x40c0e0,look:'gen',desc:'+60% de cadência nas defesas próximas.'},
+ {id:'rep2', cat:'Suporte',name:'Nanorreparo',cost:450,kind:'util',hp:260,h:2,aura:'repair',val:30,radius:6,color:0x3fae6a,look:'rep',desc:'Conserta 30 PV/s de tudo ao redor.'},
+ {id:'shield2',cat:'Suporte',name:'Escudo Pesado',cost:480,kind:'util',hp:300,h:2,aura:'armor',val:0.6,radius:5,color:0x2f5fb0,look:'shield',desc:'Tudo ao redor recebe 60% menos dano.'},
+ {id:'command',cat:'Suporte',name:'Centro de Comando',cost:600,kind:'util',hp:300,h:2,aura:'all',val:0.2,radius:7,color:0xf2b233,look:'radar',desc:'+20% de alcance, dano e cadência ao redor.'},
 ];
 const ITEM_BY_ID={};ITEMS.forEach(d=>ITEM_BY_ID[d.id]=d);
 const CATS=['Barreiras','Torretas','Armadilhas','Seguranças','Suporte'];
@@ -493,29 +543,30 @@ function mkTurretMesh(color,o){
   g.userData.head=head;return g;
 }
 function mkItemMesh(def){
+  const lk=def.look||def.id;
   const g=new THREE.Group(),k=def.kind,col=M(def.color),dark=M(0x262b2f);
   if(k==='wall'){
-    if(def.id==='sand'){for(let y=0;y<3;y++)for(let s=0;s<2;s++)g.add(bx(0.92,0.34,1.9,col,(s?0.47:-0.47)+(y%2?0.05:-0.05),0.18+y*0.35,0))}
+    if(lk==='sand'){for(let y=0;y<3;y++)for(let s=0;s<2;s++)g.add(bx(0.92,0.34,1.9,col,(s?0.47:-0.47)+(y%2?0.05:-0.05),0.18+y*0.35,0))}
     else{g.add(bx(1.96,def.h,1.96,def.glass?GLASS_MAT:col,0,def.h/2,0));
-      if(def.id==='brick')for(let y=0.4;y<3;y+=0.5)g.add(bx(2.0,0.05,2.0,M(0x6e3322),0,y,0));
-      if(def.id==='glass')for(const x of [-0.98,0.98])g.add(bx(0.06,3,2.0,M(0x3a4650),x,1.5,0));
-      if(def.id==='titan'){g.add(bx(2.0,0.18,2.0,M(0xc9d3da),0,0.3,0));g.add(bx(2.0,0.18,2.0,M(0xc9d3da),0,1.5,0));g.add(bx(2.0,0.18,2.0,M(0xc9d3da),0,2.7,0))}
+      if(lk==='brick')for(let y=0.4;y<3;y+=0.5)g.add(bx(2.0,0.05,2.0,M(0x6e3322),0,y,0));
+      if(lk==='glass')for(const x of [-0.98,0.98])g.add(bx(0.06,3,2.0,M(0x3a4650),x,1.5,0));
+      if(lk==='titan'){g.add(bx(2.0,0.18,2.0,M(0xc9d3da),0,0.3,0));g.add(bx(2.0,0.18,2.0,M(0xc9d3da),0,1.5,0));g.add(bx(2.0,0.18,2.0,M(0xc9d3da),0,2.7,0))}
       if(def.thorns){const cg=new THREE.ConeGeometry(0.1,0.4,6);for(const sz of [-1,1])for(const y of [0.6,1.5,2.4])for(const x of [-0.6,0,0.6]){const c=new THREE.Mesh(cg,M(0xbfc5c9));c.rotation.x=sz*Math.PI/2;c.position.set(x,y,sz*1.1);g.add(c)}}
-      if(def.id==='wood')for(let y=0.5;y<3;y+=0.75)g.add(bx(2.0,0.08,2.0,M(0x5e3c20),0,y,0));
-      if(def.id==='steel'){g.add(bx(2.0,0.14,2.0,M(0x9aa5ae),0,0.4,0));g.add(bx(2.0,0.14,2.0,M(0x9aa5ae),0,2.6,0))}
-      if(def.id==='door'){g.add(bx(2.0,0.25,2.0,M(0xf2b233),0,0.5,0));g.add(bx(2.0,0.25,2.0,M(0xf2b233),0,2.5,0))}
+      if(lk==='wood')for(let y=0.5;y<3;y+=0.75)g.add(bx(2.0,0.08,2.0,M(0x5e3c20),0,y,0));
+      if(lk==='steel'){g.add(bx(2.0,0.14,2.0,M(0x9aa5ae),0,0.4,0));g.add(bx(2.0,0.14,2.0,M(0x9aa5ae),0,2.6,0))}
+      if(lk==='door'){g.add(bx(2.0,0.25,2.0,M(0xf2b233),0,0.5,0));g.add(bx(2.0,0.25,2.0,M(0xf2b233),0,2.5,0))}
     }
   }else if(k==='turret'){const t=mkTurretMesh(def.color,def);g.add(t);g.userData.head=t.userData.head}
   else if(k==='trap'){
     const tp=def.trap;
-    if(def.id==='bear'){g.add(cy(0.5,0.5,0.06,col,0,0.03,0,16));for(const s of [-1,1]){const j=bx(0.9,0.22,0.05,M(0x5b6066),0,0.16,s*0.3);g.add(j)}}
-    else if(def.id==='fire'){g.add(bx(1.8,0.06,1.8,col,0,0.03,0));for(const x of [-.5,0,.5])g.add(bx(0.18,0.03,1.6,MB(0xff6a1a),x,0.07,0))}
-    else if(def.id==='claymore'){g.add(bx(0.55,0.35,0.14,col,0,0.25,0));g.add(bx(0.05,0.25,0.05,M(0x222222),-0.2,0.05,0));g.add(bx(0.05,0.25,0.05,M(0x222222),0.2,0.05,0))}
+    if(lk==='bear'){g.add(cy(0.5,0.5,0.06,col,0,0.03,0,16));for(const s of [-1,1]){const j=bx(0.9,0.22,0.05,M(0x5b6066),0,0.16,s*0.3);g.add(j)}}
+    else if(lk==='fire'){g.add(bx(1.8,0.06,1.8,col,0,0.03,0));for(const x of [-.5,0,.5])g.add(bx(0.18,0.03,1.6,MB(0xff6a1a),x,0.07,0))}
+    else if(lk==='claymore'){g.add(bx(0.55,0.35,0.14,col,0,0.25,0));g.add(bx(0.05,0.25,0.05,M(0x222222),-0.2,0.05,0));g.add(bx(0.05,0.25,0.05,M(0x222222),0.2,0.05,0))}
     else if(tp==='tele'){g.add(cy(0.85,0.85,0.05,M(0x221a33),0,0.025,0,24));const r=new THREE.Mesh(new THREE.TorusGeometry(0.7,0.06,6,24),MB(0xb18cff));r.rotation.x=Math.PI/2;r.position.y=0.08;g.add(r)}
     else if(tp==='wire'){for(const [x,z] of [[-.85,-.85],[.85,-.85],[-.85,.85],[.85,.85]])g.add(cy(0.05,0.05,1,dark,x,0.5,z,6));for(const z of [-.6,0,.6])for(const y of [.35,.7])g.add(bx(1.9,0.03,0.03,M(0x9a9a9a),0,y,z))}
     else if(tp==='mine'){g.add(cy(0.35,0.4,0.12,col,0,0.06,0));const s=new THREE.Mesh(SPHERE_GEO,MB(0xff3030));s.scale.setScalar(0.06);s.position.y=0.14;g.add(s)}
     else if(tp==='spike'){g.add(bx(1.8,0.08,1.8,col,0,0.04,0));const cg=new THREE.ConeGeometry(0.13,0.45,6);for(let a=-1;a<=1;a++)for(let b=-1;b<=1;b++){const c=new THREE.Mesh(cg,M(0xbfc5c9));c.position.set(a*0.55,0.3,b*0.55);g.add(c)}}
-    else if(tp==='oil'){g.add(cy(0.9,0.9,0.02,def.id==='glue'?col:M(0x0d0d0d),0,0.02,0,20))}
+    else if(tp==='oil'){g.add(cy(0.9,0.9,0.02,lk==='oil'?M(0x0d0d0d):col,0,0.02,0,20))}
     else if(tp==='net'){g.add(bx(1.8,0.04,1.8,M(0x3d4430),0,0.02,0));const gh=new THREE.GridHelper(1.8,6,0x9fb070,0x9fb070);gh.position.y=0.06;g.add(gh)}
     else if(tp==='gas'){g.add(cy(0.3,0.3,0.8,col,0,0.4,0));const cl=bx(5.8,1.4,5.8,new THREE.MeshBasicMaterial({color:0x7cff4a,transparent:true,opacity:0.07,depthWrite:false}),0,0.7,0);cl.raycast=()=>{};g.add(cl)}
     else if(tp==='pit'){g.add(bx(1.9,0.03,1.9,M(0x050505),0,0.02,0));for(const [x,z,w,d] of [[0,-.92,1.9,.1],[0,.92,1.9,.1],[-.92,0,.1,1.9],[.92,0,.1,1.9]])g.add(bx(w,0.05,d,M(0xf2b233),x,0.03,z))}
@@ -525,12 +576,12 @@ function mkItemMesh(def){
     else if(def.fly)g.add(mkDrone(def.color,0x58a6ff));
     else{const h=mkHumanoid(def.color,def.robot?0xff9a3a:0x9fd8ff,def.rifle);if(def.robot)h.scale.setScalar(1.3);g.add(h);if(def.swat)g.add(bx(0.7,1.1,0.08,M(0x2b3440),0,1.0,-0.4))}
   }else if(k==='util'){
-    if(def.id==='cam'){g.add(cy(0.06,0.08,2.2,dark,0,1.1,0));g.add(bx(0.3,0.25,0.55,col,0,2.2,-0.15));const s=new THREE.Mesh(SPHERE_GEO,MB(0xff3030));s.scale.setScalar(0.05);s.position.set(0,2.3,-0.44);g.add(s)}
-    else if(def.id==='light'){g.add(cy(0.07,0.09,2.4,dark,0,1.2,0));g.add(cy(0.42,0.3,0.4,dark,0,2.45,0));g.add(cy(0.36,0.36,0.05,MB(0xfff2b0),0,2.66,0))}
-    else if(def.id==='gen'){g.add(bx(1.5,1.1,1.1,col,0,0.55,0));g.add(bx(1.52,0.12,1.12,MB(0xffe066),0,0.85,0));g.add(cy(0.1,0.1,0.6,dark,0.5,1.35,0.3,8))}
-    else if(def.id==='radar'){g.add(cy(0.09,0.12,2.0,dark,0,1.0,0));const d=cy(0.6,0.15,0.2,col,0,2.1,0,16);d.rotation.x=-0.6;g.add(d);g.userData.spin=d}
-    else if(def.id==='amp'){g.add(bx(1.0,1.4,1.0,M(0x2a2f35),0,0.7,0));for(const y of [0.5,0.9,1.3])g.add(bx(1.02,0.08,1.02,MB(0xff6ac8),0,y,0))}
-    else if(def.id==='shield'){g.add(cy(0.35,0.5,1.4,col,0,0.7,0));const sp=new THREE.Mesh(SPHERE_GEO,SHIELD_MAT);sp.scale.setScalar(0.55);sp.position.y=1.7;g.add(sp)}
+    if(lk==='cam'){g.add(cy(0.06,0.08,2.2,dark,0,1.1,0));g.add(bx(0.3,0.25,0.55,col,0,2.2,-0.15));const s=new THREE.Mesh(SPHERE_GEO,MB(0xff3030));s.scale.setScalar(0.05);s.position.set(0,2.3,-0.44);g.add(s)}
+    else if(lk==='light'){g.add(cy(0.07,0.09,2.4,dark,0,1.2,0));g.add(cy(0.42,0.3,0.4,dark,0,2.45,0));g.add(cy(0.36,0.36,0.05,MB(0xfff2b0),0,2.66,0))}
+    else if(lk==='gen'){g.add(bx(1.5,1.1,1.1,col,0,0.55,0));g.add(bx(1.52,0.12,1.12,MB(0xffe066),0,0.85,0));g.add(cy(0.1,0.1,0.6,dark,0.5,1.35,0.3,8))}
+    else if(lk==='radar'){g.add(cy(0.09,0.12,2.0,dark,0,1.0,0));const d=cy(0.6,0.15,0.2,col,0,2.1,0,16);d.rotation.x=-0.6;g.add(d);g.userData.spin=d}
+    else if(lk==='amp'){g.add(bx(1.0,1.4,1.0,M(0x2a2f35),0,0.7,0));for(const y of [0.5,0.9,1.3])g.add(bx(1.02,0.08,1.02,MB(0xff6ac8),0,y,0))}
+    else if(lk==='shield'){g.add(cy(0.35,0.5,1.4,col,0,0.7,0));const sp=new THREE.Mesh(SPHERE_GEO,SHIELD_MAT);sp.scale.setScalar(0.55);sp.position.y=1.7;g.add(sp)}
     else{g.add(bx(1.3,1.3,1.3,M(0xd9dee2),0,0.65,0));const gm=MB(0x3fae6a);g.add(bx(0.7,0.2,1.34,gm,0,0.75,0));g.add(bx(0.2,0.7,1.34,gm,0,0.75,0));g.add(bx(1.34,0.2,0.7,gm,0,0.75,0));g.add(bx(1.34,0.7,0.2,gm,0,0.75,0))}
   }
   return g;
@@ -614,7 +665,7 @@ function cycleFocus(){const a=D.invs;if(a.length<2)return;for(let k=1;k<=a.lengt
 function recomputeAuras(){
   const utils=insts.filter(i=>!i.dead&&i.def.kind==='util');
   for(const i of insts){i.rangeMul=1;i.dmgMul=1;i.rateMul=1;i.armor=0;
-    for(const u of utils){if(Math.hypot(u.home.x-i.home.x,u.home.z-i.home.z)>u.def.radius)continue;const a=u.def.aura;if(a==='armor'){if(u!==i)i.armor=Math.min(0.6,i.armor+u.def.val);continue}if(i.def.kind!=='turret'&&i.def.kind!=='guard')continue;if(a==='range')i.rangeMul+=u.def.val;else if(a==='dmg')i.dmgMul+=u.def.val;else if(a==='rate')i.rateMul+=u.def.val}}
+    for(const u of utils){if(Math.hypot(u.home.x-i.home.x,u.home.z-i.home.z)>u.def.radius)continue;const a=u.def.aura;if(a==='armor'){if(u!==i)i.armor=Math.min(0.6,i.armor+u.def.val);continue}if(i.def.kind!=='turret'&&i.def.kind!=='guard')continue;if(a==='range')i.rangeMul+=u.def.val;else if(a==='dmg')i.dmgMul+=u.def.val;else if(a==='rate')i.rateMul+=u.def.val;else if(a==='all'){i.rangeMul+=u.def.val;i.dmgMul+=u.def.val;i.rateMul+=u.def.val}}}
 }
 function newInvader(k){
   const s=invStats(G.creative?G.cLevel:G.level),mul=G.creative?1:D.hpMul,m=invMesh(k);m.visible=true;
@@ -660,7 +711,7 @@ const chest=v=>new V3(v.pos.x,1.25,v.pos.z);
 function nearestInv(x,z,R,noLos){let best=null,bd=R;for(const v of D.invs){if(v.dead||v.delay>0)continue;const d=Math.hypot(v.pos.x-x,v.pos.z-z);if(d<=bd&&(noLos||los(x,z,v.pos.x,v.pos.z))){bd=d;best=v}}return best}
 function destroyInst(i,consumed){
   if(i.dead)return;i.dead=true;if(G.state==='orace'){O.destroyed[i.r*GW+i.c]=1;O.dDirty=true}PB.items.remove(i.mesh);if(grid[i.r][i.c]===i)grid[i.r][i.c]=null;
-  if(!consumed){D.destroyed++;boom(i.pos.x,1,i.pos.z,1.5,0xff7040)}
+  if(!consumed){D.destroyed++;boom(i.pos.x,1,i.pos.z,1.5,0xff7040);if(i.def.blast){boom(i.pos.x,1,i.pos.z,3.5,0xffaa33);for(const v of D.invs)if(!v.dead&&Math.hypot(v.pos.x-i.pos.x,v.pos.z-i.pos.z)<4)hurtInv(v,i.def.blast)}}
   rebuildBoxes();markDirty();recomputeAuras();
 }
 function moveInv(v,tx,tz,step){const dx=tx-v.pos.x,dz=tz-v.pos.z,d=Math.hypot(dx,dz);if(d>0.001)v.yaw=Math.atan2(-dx,-dz);if(d<=step){v.pos.x=tx;v.pos.z=tz;return true}v.pos.x+=dx/d*step;v.pos.z+=dz/d*step;return false}
@@ -671,9 +722,9 @@ function invShoot(v){
 }
 function trapEnter(c,r,v){
   const i=grid[r][c];if(!i||i.dead||i.def.kind!=='trap')return;const d=i.def;
-  if(d.trap==='mine'){boom(i.pos.x,0.5,i.pos.z,2.2,0xffaa33);hurtInv(v,d.dmg);destroyInst(i,true)}
+  if(d.trap==='mine'){boom(i.pos.x,0.5,i.pos.z,2.2,0xffaa33);hurtInv(v,d.dmg);if(d.stun)v.stunT=Math.max(v.stunT,d.stun);destroyInst(i,true)}
   else if(d.trap==='net'){v.stunT=Math.max(v.stunT,d.stun);if(d.dmg)hurtInv(v,d.dmg);destroyInst(i,true)}
-  else if(d.trap==='tele'){boom(i.pos.x,1,i.pos.z,2,0xb18cff);destroyInst(i,true);if(!v.dead){v.pos.set(0,0,7);v.outside=true;v.path=[];v.cellKey=-1;v.atCore=false;v.dirty=true;toast('Teleporte reverso! Um invasor voltou para a entrada','ok')}}
+  else if(d.trap==='tele'){if(d.cd){if(i.cd>0)return;i.cd=d.cd}boom(i.pos.x,1,i.pos.z,2,0xb18cff);if(!d.cd)destroyInst(i,true);if(!v.dead){v.pos.set(0,0,7);v.outside=true;v.path=[];v.cellKey=-1;v.atCore=false;v.dirty=true;toast('Teleporte reverso! Um invasor voltou para a entrada','ok')}}
   else if(d.trap==='pit'&&!i.used){v.stunT=Math.max(v.stunT,d.stun);hurtInv(v,d.dmg);i.used=true;i.mesh.traverse(o=>{if(o.isMesh)o.material=M(0x5a4632)})}
 }
 function trapStay(c,r,dt,v){
@@ -743,13 +794,15 @@ function updDefenders(dt,t){
         tracer(new V3(i.pos.x-Math.sin(yaw)*0.8,def.top==='coil'?2:1.1,i.pos.z-Math.cos(yaw)*0.8),chest(v),def.fx||0xffe08a,def.rate<0.2?0.1:0.06);
         if(def.boom)boom(v.pos.x,1,v.pos.z,1.6,0xffa040);}
     }else if(def.kind==='trap'){if(i.cd>0)i.cd-=dt}
+    else if(def.kind==='wall'&&def.regen){i.hp=Math.min(i.maxHp,i.hp+def.regen*dt)}
+    else if(def.kind==='util'&&(def.aura==='slow'||def.aura==='burn')){for(const v of D.invs){if(v.dead||v.delay>0)continue;if(Math.hypot(v.pos.x-i.pos.x,v.pos.z-i.pos.z)>def.radius)continue;if(def.aura==='slow'){const cur=v.slowT>0?v.slowF:1;v.slowF=Math.min(cur,def.val);v.slowT=Math.max(v.slowT,0.25)}else hurtInv(v,def.val*dt)}}
     else if(def.kind==='util'&&def.aura==='repair'){for(const j of insts){if(j.dead||j===i||j.maxHp<=1)continue;if(Math.hypot(j.pos.x-i.pos.x,j.pos.z-i.pos.z)<=def.radius)j.hp=Math.min(j.maxHp,j.hp+def.val*dt)}}
     else if(def.kind==='guard'){
       i.cd-=dt;
       const v=nearestInv(i.pos.x,i.pos.z,14*i.rangeMul,def.fly),R=def.range*i.rangeMul;
       if(v){const d=Math.hypot(v.pos.x-i.pos.x,v.pos.z-i.pos.z);i.mesh.rotation.y=Math.atan2(-(v.pos.x-i.pos.x),-(v.pos.z-i.pos.z));
         if(d>R*0.8&&def.speed>0)stepGuard(i,v.pos.x,v.pos.z,def.speed*dt);
-        if(d<=R&&i.cd<=0){i.cd=def.rate/i.rateMul;hurtInv(v,def.dmg*i.dmgMul);if(def.boom)boom(v.pos.x,1,v.pos.z,1.5,0xffa040);if(!def.dog)tracer(new V3(i.pos.x,def.fly?i.pos.y:1.25,i.pos.z),chest(v),def.fly?0x9fe3ff:0x8ec5ff);else spark(chest(v),0xff4040)}
+        if(d<=R&&i.cd<=0){i.cd=def.rate/i.rateMul;hurtInv(v,def.dmg*i.dmgMul);if(def.boom)boom(v.pos.x,1,v.pos.z,1.5,0xffa040);if(!def.dog&&!def.melee)tracer(new V3(i.pos.x,def.fly?i.pos.y:1.25,i.pos.z),chest(v),def.fly?0x9fe3ff:0x8ec5ff);else spark(chest(v),0xff4040)}
       }else if(def.speed>0){const hd=Math.hypot(i.home.x-i.pos.x,i.home.z-i.pos.z);if(hd>0.3){i.mesh.rotation.y=Math.atan2(-(i.home.x-i.pos.x),-(i.home.z-i.pos.z));stepGuard(i,i.home.x,i.home.z,def.speed*0.6*dt)}}
       if(def.fly)i.pos.y=2.5+Math.sin(t*3+i.c)*0.15;
     }
@@ -1012,7 +1065,7 @@ function startBuild(L,B){
   P.pos.set(0,0,-3);P.vy=0;P.yaw=0;P.pitch=-0.3;P.fly=false;P.hp=100;gun.visible=false;
   $('hud').hidden=false;$('hotbar').hidden=false;$('bl').hidden=true;$('br').hidden=true;$('warn').hidden=true;$('deadmsg').hidden=true;
   showOnly('pause');
-  showPause('Construa seu bunker',`Você tem ${fmt(BUILD_TIME)} e ${money(G.money)} para defender o núcleo azul no fundo. O invasor vai entrar pela abertura marcada em amarelo. `+(G.touch?'Ande com o joystick, arraste a direita da tela para olhar, mire no chão e toque em COLOCAR. CATÁLOGO mostra as 50 defesas, VOAR ajuda a ver de cima e INICIAR começa a invasão antes do tempo.':'Mire no chão e clique para colocar; Tab abre o catálogo com as 50 defesas; F liga o voo para ver de cima. Enter começa a invasão antes do tempo.'));
+  showPause('Construa seu bunker',`Você tem ${fmt(BUILD_TIME)} e ${money(G.money)} para defender o núcleo azul no fundo. O invasor vai entrar pela abertura marcada em amarelo. `+(G.touch?'Ande com o joystick, arraste a direita da tela para olhar, mire no chão e toque em COLOCAR. CATÁLOGO mostra as 100 defesas, VOAR ajuda a ver de cima e INICIAR começa a invasão antes do tempo.':'Mire no chão e clique para colocar; Tab abre o catálogo com as 100 defesas; F liga o voo para ver de cima. Enter começa a invasão antes do tempo.'));
   $('pzGo').textContent='Começar';
 }
 function startRaid(){
@@ -1479,12 +1532,12 @@ function updInsetCam(dt){
 function updHUD(){
   if(G.state==='build'){
     if(G.online){setText($('tlBig'),money(G.money));setText($('tlSub'),`${insts.length} defesas · sala ${O.code}`);setText($('phase'),'Online · construção');setText($('big'),fmt(G.buildT));
-      setText($('obj'),O.ready?`Pronto! Aguardando ${oppName()}…`:G.touch?'INICIAR: estou pronto · CATÁLOGO mostra as 50 defesas':'Enter: estou pronto · Tab: catálogo · F: voar')}
+      setText($('obj'),O.ready?`Pronto! Aguardando ${oppName()}…`:G.touch?'INICIAR: estou pronto · CATÁLOGO mostra as 100 defesas':'Enter: estou pronto · Tab: catálogo · F: voar')}
     else if(G.creative){setText($('tlBig'),'$ ∞');setText($('tlSub'),`${insts.length} defesas · salvo automaticamente`);setText($('phase'),'Modo criativo');setText($('big'),crSlot().name);
-      setText($('obj'),G.touch?`INICIAR solta ${G.cCount} invasores · CATÁLOGO mostra as 50 defesas`:`Enter: soltar ${G.cCount} invasores · Tab: catálogo · F: voar`)}
+      setText($('obj'),G.touch?`INICIAR solta ${G.cCount} invasores · CATÁLOGO mostra as 100 defesas`:`Enter: soltar ${G.cCount} invasores · Tab: catálogo · F: voar`)}
     else{setText($('tlBig'),money(G.money));setText($('tlSub'),`${insts.length} defesas · nível ${G.level} · bunker ${G.bunker}`);
     setText($('phase'),'Fase de construção');setText($('big'),fmt(G.buildT));
-    setText($('obj'),G.touch?'INICIAR começa a invasão · CATÁLOGO mostra as 50 defesas':'Enter: começar a invasão · Tab: catálogo · F: voar')}
+    setText($('obj'),G.touch?'INICIAR começa a invasão · CATÁLOGO mostra as 100 defesas':'Enter: começar a invasão · Tab: catálogo · F: voar')}
     const d=ITEMS[G.sel];setText($('hb-name'),`${G.sel+1}/${ITEMS.length} · ${d.name}`);setText($('hb-meta'),`${money(d.cost)} · ${d.cat} · ${statLine(d)}`);setText($('hb-desc'),d.desc);
     $('hb-meta').style.color=d.cost>G.money?'var(--danger)':'var(--hazard)';
     setHTML($('invInfo'),G.online?onlineBuildInfo():G.creative?`<b>Pré-visualização</b> — ${G.cCount} invasor${G.cCount>1?'es':''} de força ${G.cLevel} vão entrar por aqui.<br>Você não invade nada no modo criativo.`:`<b>Pré-visualização</b> — é isto que o invasor verá ao entrar.<br>Ele chega quando o tempo acabar ou quando você apertar Enter.`);
