@@ -943,10 +943,11 @@ function fireAt(e,eye,tgt){
     const m=new THREE.Mesh(PROJ_GEO,e.boss?PROJ_MAT2:PROJ_MAT);m.userData.noHit=true;m.position.copy(eye).addScaledVector(dir,0.7);NB.group.add(m);NB.proj.push({m,vel:dir.multiplyScalar(spd),dmg:e.dmg,life:3})}
   sfx.eshot();
 }
+function entActive(er,ri){if(er===ri)return true;if(er===ri+1)return ri===-1||!!(NB.doors[ri]&&NB.doors[ri].open);if(er===ri-1)return !!(NB.doors[er]&&NB.doors[er].open);return false}
 function updEnts(dt,t){
   const ri=G.room,h=P.crouch?1.1:1.8,ch=new V3(P.pos.x,P.pos.y+h*0.75,P.pos.z);
   for(const e of NB.ents){
-    if(!e.alive||e.room!==ri)continue;
+    if(!e.alive||!entActive(e.room,ri))continue;
     if(e.flash>0){e.flash-=dt;if(e.flash<=0)for(const m of e.mats)m.emissive.setHex(0)}
     const eye=new V3(e.pos.x,e.fly?e.pos.y:e.pos.y+e.eye,e.pos.z),dx=ch.x-eye.x,dz=ch.z-eye.z,d=Math.hypot(dx,dz)||0.001;
     const vis=G.deadT<=0&&d<32&&losNB(eye,ch),yaw=Math.atan2(-dx,-dz);
@@ -1004,7 +1005,7 @@ function updPlayer(dt,boxes){
   else if(g&&P.pos.y<=g.y1+0.001&&P.vy<=0){P.pos.y=g.y1;P.vy=0;P.onGround=true;P.ground=g}
   else{P.onGround=false;P.ground=null}
   P.eye+=((h-0.15)-P.eye)*Math.min(1,dt*14);
-  cam.position.set(P.pos.x,P.pos.y+P.eye,P.pos.z);cam.rotation.set(P.pitch,P.yaw,0);
+  cam.position.set(P.pos.x,P.pos.y+P.eye,P.pos.z);P.kick=(P.kick||0)*Math.max(0,1-dt*14);cam.rotation.set(clamp(P.pitch+P.kick,-1.5,1.5),P.yaw,0);
 }
 function hurtPlayer(dmg){
   if(G.deadT>0||(G.state!=='raid'&&G.state!=='orace'))return;P.hp-=dmg;P.lastHurt=G.time;sfx.hurt();$('vig').style.opacity=Math.min(0.85,0.25+dmg/40);setTimeout(()=>$('vig').style.opacity=0,140);
@@ -1020,7 +1021,7 @@ gun.add(bx(0.1,0.03,0.2,MB(0xf2b233),0,0.075,0.05));
 const flash=new THREE.Mesh(SPHERE_GEO,MB(0xffd27a));flash.scale.setScalar(0.06);flash.position.set(0,0.02,-0.52);flash.visible=false;gun.add(flash);
 gun.position.set(0.26,-0.25,-0.62);gun.scale.setScalar(0.75);gun.visible=false;cam.add(gun);
 function shoot(){
-  G.ammo--;G.fireCd=0.11;P.pitch=Math.min(1.5,P.pitch+0.01);G.recoil=1;flash.visible=true;setTimeout(()=>flash.visible=false,40);sfx.shot();
+  G.ammo--;G.fireCd=0.11;P.kick=Math.min(0.05,(P.kick||0)+0.012);G.recoil=1;flash.visible=true;setTimeout(()=>flash.visible=false,40);sfx.shot();
   ray.setFromCamera(CENTER,cam);ray.far=120;
   const hits=ray.intersectObjects(NB.group.children,true);let end=null;
   for(const h of hits){let o=h.object;if(o.userData.noHit||(o.parent&&o.parent.userData.noHit))continue;end=h.point;
@@ -1380,7 +1381,7 @@ function startOnlineRace(room){
   sfx.alarm();toast(`Corrida! Invada o bunker de ${oppName()} e chegue ao núcleo azul.`,'ok',4);
 }
 function shootGrid(){
-  G.ammo--;G.fireCd=0.11;P.pitch=Math.min(1.5,P.pitch+0.01);G.recoil=1;flash.visible=true;setTimeout(()=>flash.visible=false,40);sfx.shot();
+  G.ammo--;G.fireCd=0.11;P.kick=Math.min(0.05,(P.kick||0)+0.012);G.recoil=1;flash.visible=true;setTimeout(()=>flash.visible=false,40);sfx.shot();
   ray.setFromCamera(CENTER,cam);ray.far=120;
   const hits=ray.intersectObjects(PB.items.children.concat(PB.group.children.filter(o=>!o.isLine)),true);let end=null;
   for(const h of hits){let o=h.object;while(o&&!o.userData.inst)o=o.parent;const inst=o&&o.userData.inst;if(inst&&(inst.dead||inst.def.kind==='trap'))continue;
@@ -1673,6 +1674,6 @@ function loop(now){
   updInsetCam(dt);updHUD();updTouchUI();render();
 }
 applyMode();renderMenu();showOnly('menu');requestAnimationFrame(loop);
-window.__BR={los,O,onlineReady,startOnlineRace,step:(n,dt)=>{for(let k=0;k<n;k++){if(G.state!=='raid'&&G.state!=='wave')break;G.time+=dt;if(G.state==='wave')updWave(dt,G.time);else updRaid(dt,G.time);updFx(dt)}return G.state},startCreative,startWave,CR,G,P,D,NB,startBuild,startRaid,endGame,ITEMS,place,insts:()=>insts};
+window.__BR={entActive,los,O,onlineReady,startOnlineRace,step:(n,dt)=>{for(let k=0;k<n;k++){if(G.state!=='raid'&&G.state!=='wave')break;G.time+=dt;if(G.state==='wave')updWave(dt,G.time);else updRaid(dt,G.time);updFx(dt)}return G.state},startCreative,startWave,CR,G,P,D,NB,startBuild,startRaid,endGame,ITEMS,place,insts:()=>insts};
 })();
 </script>
